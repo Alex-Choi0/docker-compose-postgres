@@ -1,0 +1,29 @@
+# ./docker-compose.yaml
+# services에서는 여러개의 컨테이너를 생성할수 있습니다.
+services:
+  postgres:
+    # 컨테이너의 베이스가 될 이미지를 받는다. (위 예제에서는 postgres:12)
+    image: "postgres:12"
+    # postgres의 데이터를 관리하기 위해 볼륨을 사용자가 네이밍 해서 관리한다.
+    volumes:
+      - data:/var/lib/postgresql/data
+    # 환경변수(environment)를 직접 작성할수 있다.
+    #environment:
+    #  POSTGRES_USER: alex
+    #  POSTGRES_PASSWORD: bestpassword
+    # - POSTGRES_USER=max
+    # 각각의 환경변수를 지정하지 않고 파일을 이용하여 지정 할수 있다.
+    env_file:
+      # yaml의 상대경로로 환경변수 파일을 찾는다.
+      - ./.postgres.env
+      # 네트워크는 default로 자동 생성해준다
+      #networks:
+      #  - test1_net
+    # 외부에 포트를 노출시킨다. postgres default포트는 5432이고 4500포트로 외부 노출시킨다.
+    ports:
+      - "4500:5432"
+
+# 네이밍 볼륨이 있을시 반드시 루트에 한번더 volumes 안에 해당 네이밍 볼륨 이름을 넣는다.
+volumes:
+  # postgres는 data라는 네이밍 볼륨을 사용하기 때문에 아래에 추가해 준다.
+  data:
